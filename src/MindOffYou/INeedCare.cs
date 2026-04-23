@@ -6,7 +6,7 @@ namespace MindOffYou;
 public interface INeedCare
 {
     /// <summary>
-    /// My id. Sharing it is sharing the same consideration.
+    /// My id. Sharing it is sharing the same care.
     /// </summary>
     static abstract string CareId { get; }
 }
@@ -15,7 +15,7 @@ public interface INeedCare
 /// I'm someone worth reaching out to carefully.
 /// </summary>
 /// <remarks>
-/// The same <see cref="INeedCare.CareId"/> shares the same consideration.
+/// The same <see cref="INeedCare.CareId"/> shares the same care.
 /// </remarks>
 public interface INeedCare<TIn, TOut> : INeedCare
     where TIn : IRequestCarefully<TOut>
