@@ -72,3 +72,7 @@ Not a judgment about why things went wrong. Just a response when they did.
 - **Polly** — in-process resilience. MindOffYou extends the concept across serverless instances.
 - **MassTransit / NServiceBus** — container-hosted consumers with built-in resilience. MindOffYou provides the missing piece for teams who want to stay serverless.
 - **Circuit breaker pattern** (_Release It!_, Michael Nygard) — the classical pattern, extended to distributed coordination.
+
+---
+
+Lyrics by [Immersus Machina](https://www.immersus-machina.com)
