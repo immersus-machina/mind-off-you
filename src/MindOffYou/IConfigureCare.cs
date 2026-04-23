@@ -1,7 +1,7 @@
 namespace MindOffYou;
 
 /// <summary>
-/// I configure care.
+/// I'm where you say, up front, how each dependency should be cared for.
 /// </summary>
 public interface IConfigureCare
 {
