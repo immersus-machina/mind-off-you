@@ -1,0 +1,11 @@
+<Project>
+  <!-- Inherits the root Directory.Build.props, then layers src/-specific settings. -->
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <!-- Generate XML doc files for every src/ project (shipped libraries).
+         With TreatWarningsAsErrors inherited from the root, missing doc
+         comments on public members become build failures. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+</Project>
