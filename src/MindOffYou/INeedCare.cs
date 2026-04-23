@@ -17,11 +17,11 @@ public interface INeedCare
 /// <remarks>
 /// The same <see cref="INeedCare.CareId"/> shares the same care.
 /// </remarks>
-public interface INeedCare<TIn, TOut> : INeedCare
-    where TIn : IRequestCarefully<TOut>
+public interface INeedCare<TIn, TResponseFormat> : INeedCare
+    where TIn : IRequestCarefully<TResponseFormat>
 {
     /// <summary>
-    /// What to handle carefully.
+    /// How I answer. Called only when someone has decided it's a good time to reach out.
     /// </summary>
-    Task<TOut> HandleCarefully(TIn input, CancellationToken ct);
+    Task<TResponseFormat> HandleCarefully(TIn input, CancellationToken ct);
 }

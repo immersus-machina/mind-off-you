@@ -1,10 +1,10 @@
 namespace MindOffYou;
 
 /// <summary>
-/// A request to handle carefully, paired with its expected response type.
+/// I ask carefully, with an expected response.
 /// </summary>
 #pragma warning disable CA1040 // Avoid empty interfaces
-public interface IRequestCarefully<out TOut>
+public interface IRequestCarefully<out TResponseFormat>
 #pragma warning restore CA1040 // Avoid empty interfaces
 {
 }
