@@ -875,3 +875,6 @@ dotnet_diagnostic.CA5389.severity = suggestion
 
 # IDE2006: No blank lines after arrow expression
 dotnet_diagnostic.IDE2006.severity = none
+
+# VSTHRD200: Use 'Async' suffix for async methods
+dotnet_diagnostic.VSTHRD200.severity = none
