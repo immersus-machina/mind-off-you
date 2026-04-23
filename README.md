@@ -1,7 +1,5 @@
 # MindOffYou
 
-_Care as a queue concept._
-
 Distributed resilience for serverless queue consumers. When someone you depend on is under pressure and needs space — back off, be considerate, and resume normal interactions on their terms.
 
 ---
@@ -63,7 +61,7 @@ A willingness to treat our dependencies like they might actually be struggling �
 
 Not a replacement for in-process care. Polly already does that well — keep using it.
 
-Not a broker. Not an orchestrator. Not a framework. Just a small layer that helps consumers coordinate when consideration matters.
+Not a broker. Not an orchestrator. Not a framework. A small layer with a particular view of how consumers should treat the services they depend on.
 
 Not a judgment about why things went wrong. Just a response when they did.
 
