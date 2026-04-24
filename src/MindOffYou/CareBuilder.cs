@@ -4,14 +4,15 @@ namespace MindOffYou;
 
 internal sealed class CareBuilder : IConfigureCare
 {
-    private readonly Dictionary<string, Tending> _tendingRegistrations = [];
+    private readonly Dictionary<CareId, Tending> _tendingRegistrations = [];
 
     public IConfigureCare Mind<TNeedCare>(Tending tending) where TNeedCare : INeedCare
     {
-        if (!_tendingRegistrations.TryAdd(TNeedCare.CareId, tending))
+        var careId = new CareId(TNeedCare.CareId);
+        if (!_tendingRegistrations.TryAdd(careId, tending))
         {
             throw new InvalidOperationException(
-                $"Tending for '{TNeedCare.CareId}' is already registered.");
+                $"Tending for '{careId}' is already registered.");
         }
 
         return this;

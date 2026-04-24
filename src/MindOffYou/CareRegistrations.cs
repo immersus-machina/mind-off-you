@@ -2,9 +2,9 @@ using System.Collections.Frozen;
 
 namespace MindOffYou;
 
-internal sealed class CareRegistrations(FrozenDictionary<string, Tending> tendingRegistrations)
+internal sealed class CareRegistrations(FrozenDictionary<CareId, Tending> tendingRegistrations)
 {
-    public Tending For(string careId)
+    public Tending For(CareId careId)
     {
         return tendingRegistrations.GetValueOrDefault(careId)
             ?? throw new InvalidOperationException(
