@@ -12,11 +12,11 @@ internal sealed class Minder(
 {
     private TimeProvider Time => time ?? TimeProvider.System;
 
-    public async Task<Reply<TResponseFormat>> Reach<TRequestFormat, TResponseFormat>(
-        INeedCare<TRequestFormat, TResponseFormat> needCare,
-        TRequestFormat request,
+    public async Task<Reply<TMessage>> Reach<TRequest, TMessage>(
+        INeedCare<TRequest, TMessage> needCare,
+        TRequest request,
         CancellationToken ct)
-        where TRequestFormat : IRequestCarefully<TResponseFormat>
+        where TRequest : IRequestCarefully<TMessage>
     {
         ct.ThrowIfCancellationRequested();
 
@@ -40,94 +40,94 @@ internal sealed class Minder(
                 => await ReachOutForPossibleCheckIn(needCare, request, careId, tending, now, ct),
 
             Struggling or CheckingIn
-                => await HoldBack<TResponseFormat>(careId, tending, ct),
+                => await HoldBack<TMessage>(careId, tending, ct),
 
             _ => throw new UnreachableException(),
         };
     }
 
-    private async Task<Reply<TResponseFormat>> ReachOutCarefully<TRequestFormat, TResponseFormat>(
-        INeedCare<TRequestFormat, TResponseFormat> needCare,
-        TRequestFormat request,
+    private async Task<Reply<TMessage>> ReachOutCarefully<TRequest, TMessage>(
+        INeedCare<TRequest, TMessage> needCare,
+        TRequest request,
         CareId careId,
         Tending tending,
         DateTimeOffset now,
         CancellationToken ct)
-        where TRequestFormat : IRequestCarefully<TResponseFormat>
+        where TRequest : IRequestCarefully<TMessage>
     {
         try
         {
             var response = await needCare.HandleCarefully(request, ct);
-            return new Answered<TResponseFormat>(response);
+            return new Answered<TMessage>(response);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             await careMemory.NoteUnheard(careId, now, tending, ct);
-            return new Unanswered<TResponseFormat>(TimeSpan.Zero);
+            return new Unanswered<TMessage>(TimeSpan.Zero);
         }
     }
 
-    private async Task<Reply<TResponseFormat>> ReachOutWatchfully<TRequestFormat, TResponseFormat>(
-        INeedCare<TRequestFormat, TResponseFormat> needCare,
-        TRequestFormat request,
+    private async Task<Reply<TMessage>> ReachOutWatchfully<TRequest, TMessage>(
+        INeedCare<TRequest, TMessage> needCare,
+        TRequest request,
         CareId careId,
         Tending tending,
         DateTimeOffset now,
         CancellationToken ct)
-        where TRequestFormat : IRequestCarefully<TResponseFormat>
+        where TRequest : IRequestCarefully<TMessage>
     {
         try
         {
             var response = await needCare.HandleCarefully(request, ct);
             await careMemory.NoteHeard(careId, now, tending, ct);
-            return new Answered<TResponseFormat>(response);
+            return new Answered<TMessage>(response);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             await careMemory.NoteUnheard(careId, now, tending, ct);
-            return new Unanswered<TResponseFormat>(await CurrentWait(careId, tending, ct));
+            return new Unanswered<TMessage>(await CurrentWait(careId, tending, ct));
         }
     }
 
-    private async Task<Reply<TResponseFormat>> ReachOutEasefully<TRequestFormat, TResponseFormat>(
-        INeedCare<TRequestFormat, TResponseFormat> needCare,
-        TRequestFormat request,
+    private async Task<Reply<TMessage>> ReachOutEasefully<TRequest, TMessage>(
+        INeedCare<TRequest, TMessage> needCare,
+        TRequest request,
         CareId careId,
         Tending tending,
         DateTimeOffset now,
         CancellationToken ct)
-        where TRequestFormat : IRequestCarefully<TResponseFormat>
+        where TRequest : IRequestCarefully<TMessage>
     {
         await using var volunteered = await returnCoordinator.Volunteer(careId, ct);
         if (!volunteered.ShouldProceed)
         {
-            return await HoldBack<TResponseFormat>(careId, tending, ct);
+            return await HoldBack<TMessage>(careId, tending, ct);
         }
 
         return await ReachOutWatchfully(needCare, request, careId, tending, now, ct);
     }
 
-    private async Task<Reply<TResponseFormat>> ReachOutForPossibleCheckIn<TRequestFormat, TResponseFormat>(
-        INeedCare<TRequestFormat, TResponseFormat> needCare,
-        TRequestFormat request,
+    private async Task<Reply<TMessage>> ReachOutForPossibleCheckIn<TRequest, TMessage>(
+        INeedCare<TRequest, TMessage> needCare,
+        TRequest request,
         CareId careId,
         Tending tending,
         DateTimeOffset now,
         CancellationToken ct)
-        where TRequestFormat : IRequestCarefully<TResponseFormat>
+        where TRequest : IRequestCarefully<TMessage>
     {
         await using var volunteered = await checkInCoordinator.Volunteer(careId, ct);
         if (!volunteered.ShouldProceed)
         {
-            return await HoldBack<TResponseFormat>(careId, tending, ct);
+            return await HoldBack<TMessage>(careId, tending, ct);
         }
 
         return await ReachOutWatchfully(needCare, request, careId, tending, now, ct);
     }
 
-    private async Task<Reply<TResponseFormat>> HoldBack<TResponseFormat>(CareId careId, Tending tending, CancellationToken ct)
+    private async Task<Reply<TMessage>> HoldBack<TMessage>(CareId careId, Tending tending, CancellationToken ct)
     {
-        return new Unasked<TResponseFormat>(await CurrentWait(careId, tending, ct));
+        return new Unasked<TMessage>(await CurrentWait(careId, tending, ct));
     }
 
     private async Task<TimeSpan> CurrentWait(CareId careId, Tending tending, CancellationToken ct)

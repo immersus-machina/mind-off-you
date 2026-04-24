@@ -9,9 +9,9 @@ public interface IMindYou
     /// How I reach one of those I mind, asking carefully.
     /// </summary>
     /// <exception cref="OperationCanceledException">If <paramref name="ct"/> is cancelled.</exception>
-    Task<Reply<TResponseFormat>> Reach<TRequestFormat, TResponseFormat>(
-        INeedCare<TRequestFormat, TResponseFormat> needCare,
-        TRequestFormat request,
+    Task<Reply<TMessage>> Reach<TRequest, TMessage>(
+        INeedCare<TRequest, TMessage> needCare,
+        TRequest request,
         CancellationToken ct)
-        where TRequestFormat : IRequestCarefully<TResponseFormat>;
+        where TRequest : IRequestCarefully<TMessage>;
 }
