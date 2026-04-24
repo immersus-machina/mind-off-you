@@ -37,7 +37,7 @@ internal sealed class Minder(
                 => await ReachOutEasefully(needCare, request, careId, tending, now, ct),
 
             Struggling it when it.IsReadyForCheckIn(now)
-                => await ReachOutForPossibleCheckIn(needCare, request, careId, tending, now, ct),
+                => await ReachOutProvisionally(needCare, request, careId, tending, now, ct),
 
             Struggling or CheckingIn
                 => await HoldBack<TMessage>(careId, tending, ct),
@@ -107,7 +107,7 @@ internal sealed class Minder(
         return await ReachOutWatchfully(needCare, request, careId, tending, now, ct);
     }
 
-    private async Task<Reply<TMessage>> ReachOutForPossibleCheckIn<TRequest, TMessage>(
+    private async Task<Reply<TMessage>> ReachOutProvisionally<TRequest, TMessage>(
         INeedCare<TRequest, TMessage> needCare,
         TRequest request,
         CareId careId,
