@@ -6,9 +6,9 @@ namespace MindOffYou;
 public interface IRememberCareState
 {
     /// <summary>
-    /// Recall the current state for <paramref name="careId"/>.
+    /// Recall the current state for <paramref name="careId"/> as of <paramref name="now"/>, judged by <paramref name="tending"/>.
     /// </summary>
-    Task<CareState> Recall(CareId careId, CancellationToken ct);
+    Task<CareState> Recall(CareId careId, DateTimeOffset now, Tending tending, CancellationToken ct);
 
     /// <summary>
     /// Note that they were heard at <paramref name="now"/>.

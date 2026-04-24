@@ -49,7 +49,7 @@ public class MinderTests
     {
         // Arrange
         var (minder, consumer, memory, _, _, _) = Setup();
-        memory.State = new Wavering(ReachHistory.Empty(TimeSpan.FromSeconds(15)));
+        memory.State = new Wavering();
 
         // Act
         var reply = await minder.Reach(consumer, new TestRequest(), CancellationToken.None);
@@ -65,7 +65,7 @@ public class MinderTests
     {
         // Arrange
         var (minder, consumer, memory, _, _, waits) = Setup();
-        memory.State = new Wavering(ReachHistory.Empty(TimeSpan.FromSeconds(15)));
+        memory.State = new Wavering();
         waits.Wait = TimeSpan.FromSeconds(7);
         consumer.Handler = (_, _) => throw new InvalidOperationException("boom");
 
@@ -83,7 +83,7 @@ public class MinderTests
     {
         // Arrange
         var (minder, consumer, memory, _, returnCoord, _) = Setup();
-        memory.State = new OnTheMend(ReachHistory.Empty(TimeSpan.FromSeconds(15)));
+        memory.State = new OnTheMend();
         returnCoord.ShouldProceed = true;
 
         // Act
@@ -100,7 +100,7 @@ public class MinderTests
     {
         // Arrange
         var (minder, consumer, memory, _, returnCoord, waits) = Setup();
-        memory.State = new OnTheMend(ReachHistory.Empty(TimeSpan.FromSeconds(15)));
+        memory.State = new OnTheMend();
         returnCoord.ShouldProceed = false;
         waits.Wait = TimeSpan.FromSeconds(12);
 
@@ -268,7 +268,7 @@ internal sealed class FakeRememberCareState : IRememberCareState
     public List<(CareId CareId, DateTimeOffset Now, Tending Tending)> HeardCalls { get; } = [];
     public List<(CareId CareId, DateTimeOffset Now, Tending Tending)> UnheardCalls { get; } = [];
 
-    public Task<CareState> Recall(CareId careId, CancellationToken ct)
+    public Task<CareState> Recall(CareId careId, DateTimeOffset now, Tending tending, CancellationToken ct)
     {
         RecallCalls++;
         return Task.FromResult(State);

@@ -23,7 +23,7 @@ internal sealed class Minder(
         var (careId, tending) = registrations.For(needCare.GetType());
         var now = Time.GetUtcNow();
 
-        var state = await careMemory.Recall(careId, ct);
+        var state = await careMemory.Recall(careId, now, tending, ct);
 
         return state switch
         {

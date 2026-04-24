@@ -13,8 +13,7 @@ public sealed record Well : CareState;
 /// <summary>
 /// They've shown some unsteadiness. I'm watching.
 /// </summary>
-/// <param name="ReachHistory">My recent reach-outs, used to decide when to trip.</param>
-public sealed record Wavering(ReachHistory ReachHistory) : CareState;
+public sealed record Wavering : CareState;
 
 /// <summary>
 /// They're struggling — we're giving them space.
@@ -36,5 +35,4 @@ public sealed record CheckingIn : CareState;
 /// <summary>
 /// They're on the mend — recovering. I reach out easefully.
 /// </summary>
-/// <param name="ReachHistory">My recent reach-outs, used to decide when to trip again.</param>
-public sealed record OnTheMend(ReachHistory ReachHistory) : CareState;
+public sealed record OnTheMend : CareState;
