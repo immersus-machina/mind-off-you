@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace MindOffYou;
 
@@ -18,8 +17,7 @@ public static class MindOffYouServiceCollectionExtensions
         var builder = new CareBuilder();
         configure(builder);
         services.AddSingleton(builder.Build());
-        services.TryAddSingleton(TimeProvider.System);
-        services.AddSingleton<IMindYou, Orchestrator>();
+        services.AddSingleton<IMindYou, Minder>();
         return services;
     }
 }

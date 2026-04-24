@@ -11,7 +11,12 @@ public interface IRememberCareState
     Task<CareState> Recall(CareId careId, CancellationToken ct);
 
     /// <summary>
-    /// Atomically recall, transform, and register.
+    /// Note that they were heard at <paramref name="now"/>.
     /// </summary>
-    Task<CareState> Register(CareId careId, Func<CareState, CareState> transform, CancellationToken ct);
+    Task NoteHeard(CareId careId, DateTimeOffset now, Tending tending, CancellationToken ct);
+
+    /// <summary>
+    /// Note that they weren't heard at <paramref name="now"/>.
+    /// </summary>
+    Task NoteUnheard(CareId careId, DateTimeOffset now, Tending tending, CancellationToken ct);
 }
