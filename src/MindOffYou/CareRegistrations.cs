@@ -2,14 +2,17 @@ using System.Collections.Frozen;
 
 namespace MindOffYou;
 
-internal sealed class CareRegistrations(FrozenDictionary<CareId, Tending> tendingRegistrations)
+internal sealed class CareRegistrations(FrozenDictionary<Type, (CareId CareId, Tending Tending)> byType)
 {
-    public Tending For(CareId careId)
+    public (CareId CareId, Tending Tending) For(Type type)
     {
-        return tendingRegistrations.GetValueOrDefault(careId)
-            ?? throw new InvalidOperationException(
-                $"No tending registered for '{careId}'. " +
-                $"Did you {nameof(IConfigureCare.Mind)}<TNeedCare>() in " +
+        if (!byType.TryGetValue(type, out var registration))
+        {
+            throw new InvalidOperationException(
+                $"No care registered for type '{type.FullName}'. " +
+                $"Did you {nameof(IConfigureCare.Mind)}<{type.Name}>() in " +
                 $"{nameof(MindOffYouServiceCollectionExtensions.AddMindOffYou)}?");
+        }
+        return registration;
     }
 }

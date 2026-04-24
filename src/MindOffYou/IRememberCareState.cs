@@ -6,12 +6,12 @@ namespace MindOffYou;
 public interface IRememberCareState
 {
     /// <summary>
-    /// Read the current state for <paramref name="careId"/>.
+    /// Recall the current state for <paramref name="careId"/>.
     /// </summary>
-    Task<CareState> Read(CareId careId, CancellationToken ct);
+    Task<CareState> Recall(CareId careId, CancellationToken ct);
 
     /// <summary>
-    /// Atomically read, transform, and write back.
+    /// Atomically recall, transform, and register.
     /// </summary>
-    Task<CareState> Update(CareId careId, Func<CareState, CareState> transform, CancellationToken ct);
+    Task<CareState> Register(CareId careId, Func<CareState, CareState> transform, CancellationToken ct);
 }

@@ -6,12 +6,12 @@ namespace MindOffYou;
 public interface IRememberWait
 {
     /// <summary>
-    /// Read the current wait, or <paramref name="fallback"/> if none is stored.
+    /// Recall the current wait, or <paramref name="fallback"/> if none is stored.
     /// </summary>
-    Task<TimeSpan> Read(CareId careId, TimeSpan fallback, CancellationToken ct);
+    Task<TimeSpan> Recall(CareId careId, TimeSpan fallback, CancellationToken ct);
 
     /// <summary>
-    /// Write the new wait.
+    /// Register a new wait.
     /// </summary>
-    Task Write(CareId careId, TimeSpan wait, CancellationToken ct);
+    Task Register(CareId careId, TimeSpan wait, CancellationToken ct);
 }

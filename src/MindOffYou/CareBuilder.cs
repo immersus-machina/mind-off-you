@@ -4,22 +4,27 @@ namespace MindOffYou;
 
 internal sealed class CareBuilder : IConfigureCare
 {
-    private readonly Dictionary<CareId, Tending> _tendingRegistrations = [];
+    private readonly Dictionary<Type, (CareId CareId, Tending Tending)> _registrations = [];
 
     public IConfigureCare Mind<TNeedCare>(Tending tending) where TNeedCare : INeedCare
     {
         var careId = new CareId(TNeedCare.CareId);
-        if (!_tendingRegistrations.TryAdd(careId, tending))
+
+        var conflict = _registrations.FirstOrDefault(kvp => kvp.Value.CareId == careId);
+        if (conflict.Key is not null)
         {
             throw new InvalidOperationException(
-                $"Tending for '{careId}' is already registered.");
+                $"CareId '{careId}' is already registered by '{conflict.Key.FullName}'; " +
+                $"cannot also register '{typeof(TNeedCare).FullName}'.");
         }
+
+        _registrations[typeof(TNeedCare)] = (careId, tending);
 
         return this;
     }
 
     public CareRegistrations Build()
     {
-        return new(_tendingRegistrations.ToFrozenDictionary());
+        return new(_registrations.ToFrozenDictionary());
     }
 }
