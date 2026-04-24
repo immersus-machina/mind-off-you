@@ -63,6 +63,7 @@ internal sealed class Minder(
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             await careMemory.NoteUnheard(careId, now, tending, ct);
+            needCare.WhenUnheard(request, ex);
             return new Unanswered<TMessage>(TimeSpan.Zero);
         }
     }
@@ -85,6 +86,7 @@ internal sealed class Minder(
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             await careMemory.NoteUnheard(careId, now, tending, ct);
+            needCare.WhenUnheard(request, ex);
             return new Unanswered<TMessage>(await CurrentWait(careId, tending, ct));
         }
     }

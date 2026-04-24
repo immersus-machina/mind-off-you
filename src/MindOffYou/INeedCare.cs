@@ -24,4 +24,12 @@ public interface INeedCare<TRequest, TMessage> : INeedCare
     /// How I answer. Called only when someone has decided it's a good time to reach out.
     /// </summary>
     Task<TMessage> HandleCarefully(TRequest input, CancellationToken ct);
+
+    /// <summary>
+    /// What I make of it when I'm unheard. Override to log through your own channels; the default writes to the console so failures aren't silent.
+    /// </summary>
+    void WhenUnheard(TRequest input, Exception cause)
+    {
+        Console.Error.WriteLine($"[MindOffYou] {GetType().Name} unheard: {cause}");
+    }
 }
